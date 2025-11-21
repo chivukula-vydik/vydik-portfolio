@@ -3,7 +3,8 @@ import {
   Activity, ArrowUpRight, ChevronRight, 
   Github, Linkedin, Mail, Brain, Network, Cpu,
   Sparkles, Code, Zap, Layers, FlaskConical,
-  Users, Award, Music, Utensils, Globe
+  Users, Award, Music, Utensils, Globe, Terminal,
+  Palette, Database, PenTool
 } from 'lucide-react';
 
 // --- Custom Interactive Cursor ---
@@ -148,7 +149,7 @@ const InteractiveText = ({ text, baseColor = "white", className = "" }) => {
   );
 };
 
-// --- 3D Background ---
+// --- 3D Background (Ultra Dull) ---
 const GeometricBackground = () => {
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
@@ -197,13 +198,11 @@ const GeometricBackground = () => {
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         
         if (dist < lightRadius) {
-          // Flashlight Effect
           const intensity = 1 - dist / lightRadius;
           ctx.fillStyle = `rgba(168, 85, 247, ${0.4 + intensity * 0.6})`; 
           ctx.shadowBlur = 15 * intensity;
           ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
         } else {
-          // DULL Ambient (Very Faint Grey/Purple - 8% Opacity)
           ctx.fillStyle = 'rgba(100, 100, 110, 0.08)'; 
           ctx.shadowBlur = 0;
         }
@@ -218,18 +217,15 @@ const GeometricBackground = () => {
       const width = canvas.width;
       const height = canvas.height;
       
-      // 1. Base Black Background
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, width, height);
       
-      // 2. Very subtle ambient gradient
       const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
       gradient.addColorStop(0, '#0a0a0a'); 
       gradient.addColorStop(1, '#000000');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      // 3. Flashlight Overlay
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
       
@@ -257,13 +253,12 @@ const GeometricBackground = () => {
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
             
-            // Very low base opacity (3%)
             let opacity = 0.03;
-            let color = '80, 80, 90'; // Dark Grey lines
+            let color = '80, 80, 90';
             
             if (mouseDist < 400) {
                opacity += (1 - mouseDist/400) * 0.6;
-               color = '216, 180, 254'; // Bright Purple when touched
+               color = '216, 180, 254'; 
             }
             
             ctx.strokeStyle = `rgba(${color}, ${opacity})`;
@@ -298,7 +293,6 @@ const Badge = ({ children }) => (
   </span>
 );
 
-// FIXED STAT COMPONENT - Allows Wrapping
 const Stat = ({ value, label }) => (
   <div className="flex flex-col items-start p-4 border-l border-white/10 hover:border-purple-500/50 transition-colors group h-full justify-center">
     <span className="text-3xl md:text-3xl lg:text-4xl font-bold text-white font-sans tracking-tight group-hover:text-purple-300 transition-colors leading-tight">
@@ -319,9 +313,10 @@ const GlassCard = ({ children, className = "" }) => (
 const Feature = ({ title, desc, tags, icon: Icon = Activity }) => (
   <GlassCard className="h-full">
     <div className="mb-6 flex justify-between items-start">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-white/5 text-slate-400 group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
-          <Icon size={20} />
+      <div className="flex items-center gap-4">
+        <div className="relative p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10 group-hover:from-purple-500/20 group-hover:to-blue-500/20 transition-all duration-500">
+          <div className="absolute inset-0 bg-purple-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <Icon size={24} className="relative z-10 text-slate-300 group-hover:text-purple-300 group-hover:scale-110 transition-transform duration-500" />
         </div>
         <h3 className="text-xl font-bold text-white leading-tight">{title}</h3>
       </div>
@@ -343,9 +338,9 @@ const Feature = ({ title, desc, tags, icon: Icon = Activity }) => (
 const LeadershipCard = ({ role, organization, desc, icon: Icon, status = "active" }) => (
   <GlassCard>
     <div className="flex justify-between items-start mb-4">
-      <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-full ${status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-500/20 text-slate-400'}`}>
-          <Icon size={18} />
+      <div className="flex items-center gap-4">
+        <div className={`relative p-3 rounded-xl border transition-all duration-500 ${status === 'active' ? 'bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20' : 'bg-white/5 border-white/10'}`}>
+           <Icon size={20} className={status === 'active' ? 'text-emerald-400' : 'text-slate-400'} />
         </div>
         <div>
           <h3 className="text-lg font-bold text-white leading-tight">{role}</h3>
@@ -377,17 +372,20 @@ const TopBar = ({ activeSection, scrollToSection, scrolled }) => (
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
         <div className="relative flex bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-xl">
           <div 
-            className={`absolute top-1 bottom-1 w-[calc(33.33%-4px)] bg-purple-600 rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[0_0_20px_rgba(147,51,234,0.4)]`}
+            className={`absolute top-1 bottom-1 w-[calc(25%-4px)] bg-purple-600 rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[0_0_20px_rgba(147,51,234,0.4)]`}
             style={{ 
-              left: activeSection === 'research' ? '4px' : activeSection === 'projects' ? 'calc(33.33% + 2px)' : 'calc(66.66%)' 
+              left: activeSection === 'about' ? '4px' 
+                  : activeSection === 'research' ? 'calc(25% + 2px)' 
+                  : activeSection === 'projects' ? 'calc(50%)' 
+                  : 'calc(75% - 2px)'
             }}
           />
           
-          {['research', 'projects', 'leadership'].map(section => (
+          {['about', 'research', 'projects', 'leadership'].map(section => (
             <button 
               key={section}
               onClick={() => scrollToSection(section)}
-              className={`relative z-10 px-6 py-2 text-xs font-bold tracking-wide uppercase transition-colors duration-300 w-32 ${activeSection === section ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+              className={`relative z-10 px-6 py-2 text-xs font-bold tracking-wide uppercase transition-colors duration-300 w-28 ${activeSection === section ? 'text-white' : 'text-slate-400 hover:text-white'}`}
             >
               {section}
             </button>
@@ -402,7 +400,7 @@ const TopBar = ({ activeSection, scrollToSection, scrolled }) => (
       </div>
     </div>
     <div className="md:hidden flex justify-center mt-4 pb-2 space-x-4 border-t border-white/5 pt-4">
-       {['research', 'projects', 'leadership'].map(sect => (
+       {['about', 'research', 'projects', 'leadership'].map(sect => (
          <button key={sect} onClick={() => scrollToSection(sect)} className={`text-xs font-bold uppercase tracking-wider ${activeSection === sect ? 'text-purple-400' : 'text-slate-500'}`}>{sect}</button>
        ))}
     </div>
@@ -411,18 +409,22 @@ const TopBar = ({ activeSection, scrollToSection, scrolled }) => (
 
 export default function VydikPortfolio() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('research');
+  const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-      const research = document.getElementById('research');
-      const projects = document.getElementById('projects');
-      const leadership = document.getElementById('leadership');
-      if (leadership && window.scrollY >= leadership.offsetTop - 300) setActiveSection('leadership');
-      else if (projects && window.scrollY >= projects.offsetTop - 300) setActiveSection('projects');
-      else if (research && window.scrollY >= research.offsetTop - 300) setActiveSection('research');
-      else setActiveSection('research');
+      const sections = ['leadership', 'projects', 'research', 'about'];
+      let current = 'hero';
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element && window.scrollY >= element.offsetTop - 300) {
+          current = section;
+          break;
+        }
+      }
+      setActiveSection(current);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -471,7 +473,7 @@ export default function VydikPortfolio() {
             </h1>
             
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl font-light leading-relaxed mb-12 border-l-2 border-white/20 pl-6">
-              <strong className="text-white font-bold drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Vydik Chivukula</strong> is a <strong className="text-white font-bold">Deep Learning Researcher</strong> and <strong className="text-white font-bold">Community Leader</strong> at <strong className="text-white font-bold">NIT Warangal</strong> & <strong className="text-white font-bold">IISc</strong>, specializing in <strong className="text-purple-300 font-bold">Neural Operators</strong>, <strong className="text-purple-300 font-bold">LLMs</strong>, and <strong className="text-purple-300 font-bold">Scalable AI Architectures</strong>.
+              <strong className="text-white font-bold drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Vydik Chivukula</strong> is a <strong className="text-white font-bold">Deep Learning Researcher</strong> at <strong className="text-white font-bold">NIT Warangal</strong> & <strong className="text-white font-bold">IISc</strong>, specializing in <strong className="text-purple-300 font-bold">Neural Operators</strong>, <strong className="text-purple-300 font-bold">LLMs</strong>, and <strong className="text-purple-300 font-bold">Scalable AI Architectures</strong>.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 border-t border-white/10 pt-12">
@@ -481,6 +483,56 @@ export default function VydikPortfolio() {
               <Stat value="IISc" label="Research Lab" />
               <Stat value="Gen Sec" label="Leadership" /> 
             </div>
+          </div>
+        </div>
+
+        {/* --- ABOUT ME SECTION --- */}
+        <div id="about" className="max-w-7xl mx-auto mb-32 pt-10">
+          <div className="flex items-end justify-between mb-12 border-b border-white/10 pb-6">
+             <h2 className="text-4xl font-bold tracking-tight text-white">About Me</h2>
+             <span className="text-purple-400 font-mono text-xs tracking-widest uppercase hidden md:block font-bold">Personal Profile</span>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+             {/* Personal Bio Card */}
+             <div className="md:col-span-2">
+                <GlassCard className="h-full p-8 flex flex-col justify-center">
+                   <h3 className="text-3xl font-bold text-white mb-6">
+                      <span className="text-purple-400">Hello, I'm Vydik.</span>
+                   </h3>
+                   <p className="text-slate-300 text-lg leading-relaxed font-light mb-6">
+                      I enjoy solving puzzles—whether it’s a complex integral, a chess endgame, or an optimization problem in a neural network. At <strong className="text-white font-medium">NIT Warangal</strong>, I study Mathematics and Computing, but my passion lies in building systems that learn.
+                   </p>
+                   <p className="text-slate-300 text-lg leading-relaxed font-light mb-6">
+                      Beyond code, I’m a creator and a community builder. I design visual assets for college fests, organize chess tournaments as <strong className="text-purple-400">General Secretary</strong>, and jam with the Music Club. I believe the best solutions come from a blend of rigorous logic and creative freedom.
+                   </p>
+                   <div className="flex flex-wrap gap-8 mt-8 border-t border-white/10 pt-6">
+                      <div className="flex flex-col">
+                         <span className="text-xs text-slate-500 font-mono uppercase tracking-wider mb-1">Institute</span>
+                         <span className="text-white font-bold text-lg">NIT Warangal</span>
+                      </div>
+                      <div className="hidden md:block w-px bg-white/10"></div>
+                      <div className="flex flex-col">
+                         <span className="text-xs text-slate-500 font-mono uppercase tracking-wider mb-1">Degree</span>
+                         <span className="text-white font-bold text-lg">B.Tech, Mathematics & Computing</span>
+                      </div>
+                   </div>
+                </GlassCard>
+             </div>
+
+             {/* Visual/Stats Card */}
+             <div className="md:col-span-1 flex flex-col gap-6">
+                <GlassCard className="flex-1 flex flex-col justify-center items-center text-center p-8 bg-gradient-to-br from-purple-900/20 to-transparent">
+                   <Palette size={48} className="text-purple-400 mb-4 animate-pulse" />
+                   <h4 className="text-xl font-bold text-white">Creative Focus</h4>
+                   <p className="text-slate-400 text-sm mt-2 font-light">Graphic Design</p>
+                </GlassCard>
+                <GlassCard className="flex-1 flex flex-col justify-center items-center text-center p-8">
+                   <Database size={48} className="text-emerald-400 mb-4" />
+                   <h4 className="text-xl font-bold text-white">Tech Stack</h4>
+                   <p className="text-slate-400 text-sm mt-2 font-light">SQL, Python, C++, DSA, OOP</p>
+                </GlassCard>
+             </div>
           </div>
         </div>
 
@@ -535,7 +587,7 @@ export default function VydikPortfolio() {
         {/* --- PROJECTS SECTION --- */}
         <div id="projects" className="max-w-7xl mx-auto mb-32 pt-10">
           <div className="flex items-end justify-between mb-12 border-b border-white/10 pb-6">
-             <h2 className="text-4xl font-bold tracking-tight text-white">Engineering Projects</h2>
+             <h2 className="text-4xl font-bold tracking-tight text-white">Engineering & Design</h2>
              <span className="text-purple-400 font-mono text-xs tracking-widest uppercase hidden md:block font-bold">Deployed Artifacts</span>
           </div>
 
@@ -546,18 +598,21 @@ export default function VydikPortfolio() {
               tags={['Reinforcement Learning', 'Neural Networks', 'Python']}
               icon={Cpu}
             />
+            
+            <Feature 
+              title="Library Management System"
+              desc={<>A comprehensive <strong className="text-white font-bold">SQL-based</strong> database system for inventory tracking and user management. Implemented complex SQL constraints for data integrity and optimized queries for rapid retrieval.</>}
+              tags={['SQL', 'Database Design', 'Backend Architecture']}
+              icon={Layers}
+            />
+
             <Feature 
               title="Generative Legal Assistant"
               desc={<>An <strong className="text-white font-bold">LLM-powered</strong> application capable of interpreting Indian Penal Code queries. Built using <strong className="text-white font-bold">Transformer architectures</strong> to deliver context-aware natural language responses.</>}
               tags={['GenAI', 'LLMs', 'Transformers', 'NLP']}
               icon={Sparkles}
             />
-            <Feature 
-              title="Digit Recognition System"
-              desc={<>Optimized <strong className="text-white font-bold">Deep CNN architecture</strong> for handwritten digit classification. Achieved state-of-the-art accuracy on MNIST using advanced <strong className="text-white font-bold">regularization</strong> and dropout layers.</>}
-              tags={['TensorFlow', 'Computer Vision', 'Pattern Rec']}
-              icon={Code}
-            />
+            
             <Feature 
                   title="Flow Prediction CNN"
                   desc={<>Leveraging <strong className="text-white font-bold">Convolutional Neural Networks (CNNs)</strong> to predict 2D fluid velocity fields. Implements <strong className="text-white font-bold">custom loss functions</strong> to ensure physical consistency in model output.</>}
@@ -613,13 +668,13 @@ export default function VydikPortfolio() {
           </div>
         </div>
 
-        {/* Skills Ticker */}
-        <div className="max-w-7xl mx-auto mt-24 border-t border-white/10 py-12">
-          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        {/* Skills Ticker (Centered & Creative) */}
+        <div className="max-w-7xl mx-auto mt-24 border-t border-white/10 py-12 text-center">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center justify-center gap-2">
             <Zap size={18} className="text-purple-400" /> Technical Arsenal
           </h3>
-          <div className="flex flex-wrap gap-3 items-center justify-start">
-            {['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'Transformers', 'Scikit-learn', 'C++', 'SQL', 'Google Cloud', 'Git', 'Pandas', 'NumPy', 'Reinforcement Learning'].map(s => (
+          <div className="flex flex-wrap gap-3 items-center justify-center">
+            {['Python', 'SQL', 'DSA', 'PyTorch', 'TensorFlow', 'LLMs', 'Transformers', 'Scikit-learn', 'C++', 'Google Cloud', 'Git', 'Pandas', 'NumPy', 'Reinforcement Learning'].map(s => (
               <span key={s} className="px-5 py-2 text-sm font-bold text-slate-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:text-purple-300 hover:border-purple-500/30 cursor-default transition-all shadow-lg shadow-black/20">{s}</span>
             ))}
           </div>
