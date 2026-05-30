@@ -4,7 +4,7 @@ import {
   Github, Linkedin, Mail, Brain, Network, Cpu,
   Sparkles, Code, Zap, Layers, FlaskConical,
   Users, Award, Music, Utensils, Globe, Terminal,
-  Palette, Database, PenTool
+  Palette, Database, PenTool, TrendingUp, Radio
 } from 'lucide-react';
 
 // --- Custom Interactive Cursor ---
@@ -59,7 +59,7 @@ const InteractiveText = ({ text, baseColor = "white", className = "" }) => {
     let mouseX = -10000;
     let mouseY = -10000;
     let charPositions = [];
-    
+
     const updatePositions = () => {
       charPositions = spans.map(span => {
         const rect = span.getBoundingClientRect();
@@ -103,7 +103,7 @@ const InteractiveText = ({ text, baseColor = "white", className = "" }) => {
           const intensity = Math.pow(1 - dist / maxDist, 2); 
           const lift = intensity * -25; 
           const scale = 1 + intensity * 0.3;
-          
+
           span.style.transform = `translateY(${lift}px) scale(${scale})`;
           span.style.color = `rgba(192, 132, 252, ${0.6 + intensity * 0.4})`; 
           span.style.textShadow = `0 0 ${20 * intensity}px rgba(168, 85, 247, 0.8)`;
@@ -166,7 +166,7 @@ const GeometricBackground = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -196,7 +196,7 @@ const GeometricBackground = () => {
 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        
+
         if (dist < lightRadius) {
           const intensity = 1 - dist / lightRadius;
           ctx.fillStyle = `rgba(168, 85, 247, ${0.4 + intensity * 0.6})`; 
@@ -206,7 +206,7 @@ const GeometricBackground = () => {
           ctx.fillStyle = 'rgba(100, 100, 110, 0.08)'; 
           ctx.shadowBlur = 0;
         }
-        
+
         ctx.fill();
       }
     }
@@ -216,10 +216,10 @@ const GeometricBackground = () => {
     const animate = () => {
       const width = canvas.width;
       const height = canvas.height;
-      
+
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, width, height);
-      
+
       const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
       gradient.addColorStop(0, '#0a0a0a'); 
       gradient.addColorStop(1, '#000000');
@@ -228,7 +228,7 @@ const GeometricBackground = () => {
 
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
-      
+
       const flashlight = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 500);
       flashlight.addColorStop(0, 'rgba(88, 28, 135, 0.12)'); 
       flashlight.addColorStop(1, 'rgba(0,0,0,0)');
@@ -252,15 +252,15 @@ const GeometricBackground = () => {
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
-            
+
             let opacity = 0.03;
             let color = '80, 80, 90';
-            
+
             if (mouseDist < 400) {
                opacity += (1 - mouseDist/400) * 0.6;
                color = '216, 180, 254'; 
             }
-            
+
             ctx.strokeStyle = `rgba(${color}, ${opacity})`;
             ctx.stroke();
           }
@@ -380,7 +380,7 @@ const TopBar = ({ activeSection, scrollToSection, scrolled }) => (
                   : 'calc(75% - 2px)'
             }}
           />
-          
+
           {['about', 'research', 'projects', 'leadership'].map(section => (
             <button 
               key={section}
@@ -392,7 +392,7 @@ const TopBar = ({ activeSection, scrollToSection, scrolled }) => (
           ))}
         </div>
       </div>
-      
+
       <div className="flex items-center gap-4">
          <a href="https://github.com/chivukula-vydik" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors"><Github size={20} /></a>
          <a href="https://in.linkedin.com/in/vydik-chivukula-094135319" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors"><Linkedin size={20} /></a>
@@ -416,7 +416,7 @@ export default function VydikPortfolio() {
       setScrolled(window.scrollY > 20);
       const sections = ['leadership', 'projects', 'research', 'about'];
       let current = 'hero';
-      
+
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element && window.scrollY >= element.offsetTop - 300) {
@@ -449,7 +449,7 @@ export default function VydikPortfolio() {
       <TopBar activeSection={activeSection} scrollToSection={scrollToSection} scrolled={scrolled} />
 
       <main className="relative z-10 pt-32 px-6 pb-20">
-        
+
         {/* Hero Section */}
         <div id="hero" className="max-w-7xl mx-auto mb-32 animate-fade-in">
           <div className="max-w-5xl">
@@ -457,7 +457,7 @@ export default function VydikPortfolio() {
               <Badge>Deep Learning</Badge>
               <Badge>Generative AI</Badge>
             </div>
-            
+
             <h1 className="mt-6 text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight mb-8 cursor-default">
               <div className="text-white">
                 <InteractiveText text="Architecting" baseColor="#ffffff" />
@@ -471,7 +471,7 @@ export default function VydikPortfolio() {
                 </div>
               </div>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl font-light leading-relaxed mb-12 border-l-2 border-white/20 pl-6">
               <strong className="text-white font-bold drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Vydik Chivukula</strong> is a <strong className="text-white font-bold">Deep Learning Researcher</strong> at <strong className="text-white font-bold">NIT Warangal</strong> & <strong className="text-white font-bold">IISc</strong>, specializing in <strong className="text-purple-300 font-bold">Neural Operators</strong>, <strong className="text-purple-300 font-bold">LLMs</strong>, and <strong className="text-purple-300 font-bold">Scalable AI Architectures</strong>.
             </p>
@@ -501,10 +501,10 @@ export default function VydikPortfolio() {
                       <span className="text-purple-400">Hello, I'm Vydik.</span>
                    </h3>
                    <p className="text-slate-300 text-lg leading-relaxed font-light mb-6">
-                      I enjoy solving puzzles—whether it’s a complex integral, a chess endgame, or an optimization problem in a neural network. At <strong className="text-white font-medium">NIT Warangal</strong>, I study Mathematics and Computing, but my passion lies in building systems that learn.
+                      I enjoy solving puzzles—whether it's a complex integral, a chess endgame, or an optimization problem in a neural network. At <strong className="text-white font-medium">NIT Warangal</strong>, I study Mathematics and Computing, but my passion lies in building systems that learn.
                    </p>
                    <p className="text-slate-300 text-lg leading-relaxed font-light mb-6">
-                      Beyond code, I’m a creator and a community builder. I design visual assets for college fests, organize chess tournaments as <strong className="text-purple-400">General Secretary</strong>, and jam with the Music Club. I believe the best solutions come from a blend of rigorous logic and creative freedom.
+                      Beyond code, I'm a creator and a community builder. I design visual assets for college fests, organize chess tournaments as <strong className="text-purple-400">General Secretary</strong>, and jam with the Music Club. I believe the best solutions come from a blend of rigorous logic and creative freedom.
                    </p>
                    <div className="flex flex-wrap gap-8 mt-8 border-t border-white/10 pt-6">
                       <div className="flex flex-col">
@@ -547,14 +547,14 @@ export default function VydikPortfolio() {
             <div className="glass-card group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] hover:border-purple-500/30 transition-all duration-500 backdrop-blur-sm p-8 md:p-10 flex flex-col justify-between min-h-[360px]">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50 group-hover:opacity-100 group-hover:h-[3px] transition-all duration-500 shadow-[0_0_10px_purple]" />
               <div className="absolute right-0 top-0 w-64 h-64 bg-purple-600/10 blur-[80px] rounded-full pointer-events-none" />
-              
+
               <div>
                 <div className="flex items-center gap-3 mb-6">
                    <div className="p-1.5 bg-purple-500/20 rounded text-purple-300"><Network size={20} /></div>
                    <span className="text-purple-300 font-mono text-xs uppercase tracking-wider font-bold">Flagship Research</span>
                 </div>
                 <h3 className="text-3xl font-bold text-white mb-2">Neural Operator Architectures</h3>
-                
+
                 <div className="flex flex-wrap gap-3 mb-6">
                     <span 
                         onClick={() => window.open('https://flamelab-iisc.github.io/', '_blank')}
@@ -572,7 +572,7 @@ export default function VydikPortfolio() {
                   Implementing <strong className="text-white font-bold">Physics-Informed Neural Networks (PINNs)</strong> architectures for PDE-based simulations, collaborating with researchers at the intersection of AI and physics.
                 </p>
               </div>
-              
+
               <div className="mt-12 flex flex-wrap gap-3">
                 {['Neural Networks', 'Optimization', 'PyTorch', 'AI Research', 'CFD'].map(t => (
                   <span key={t} className="px-4 py-1.5 text-xs font-bold text-white bg-white/5 border border-white/10 rounded-full backdrop-blur-md">
@@ -592,13 +592,28 @@ export default function VydikPortfolio() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-             <Feature 
+
+            <Feature 
+              title="FINVY — Autonomous Trading"
+              desc={<>An <strong className="text-white font-bold">agentic AI trading platform</strong> built with <strong className="text-white font-bold">LangGraph</strong> that autonomously executes stock trades. Features a custom <strong className="text-white font-bold">dual-architecture LSTM + Transformer</strong> model for EOD and 1-week-ahead price forecasting, a <strong className="text-white font-bold">RAG-powered chatbot</strong> with cited news sources and buy/sell recommendations, and secure Google OAuth + OTP authentication.</>}
+              tags={['LangGraph', 'LSTM', 'Transformer', 'RAG', 'React', 'Docker']}
+              icon={TrendingUp}
+            />
+
+            <Feature 
+              title="Bluetooth Encrypted Chat"
+              desc={<>A fully <strong className="text-white font-bold">offline, internet-free</strong> communication system over <strong className="text-white font-bold">Bluetooth RFCOMM</strong> sockets. Supports end-to-end encrypted messaging, voice notes, and live <strong className="text-white font-bold">full-duplex audio calls</strong> using Fernet encryption (AES-128-CBC + HMAC-SHA256) with a custom 5-byte binary framing protocol.</>}
+              tags={['Bluetooth', 'Encryption', 'RFCOMM', 'PyAudio', 'Threading']}
+              icon={Radio}
+            />
+
+            <Feature 
               title="Stockfischer Chess AI"
               desc={<>A neural-network-enhanced chess engine. Implements <strong className="text-white font-bold">Reinforcement Learning</strong> concepts, Alpha-Beta pruning, and custom evaluation heuristics trained on <strong className="text-white font-bold">30k+ grandmaster games</strong>.</>}
               tags={['Reinforcement Learning', 'Neural Networks', 'Python']}
               icon={Cpu}
             />
-            
+
             <Feature 
               title="Library Management System"
               desc={<>A comprehensive <strong className="text-white font-bold">SQL-based</strong> database system for inventory tracking and user management. Implemented complex SQL constraints for data integrity and optimized queries for rapid retrieval.</>}
@@ -612,7 +627,7 @@ export default function VydikPortfolio() {
               tags={['GenAI', 'LLMs', 'Transformers', 'NLP']}
               icon={Sparkles}
             />
-            
+
             <Feature 
                   title="Flow Prediction CNN"
                   desc={<>Leveraging <strong className="text-white font-bold">Convolutional Neural Networks (CNNs)</strong> to predict 2D fluid velocity fields. Implements <strong className="text-white font-bold">custom loss functions</strong> to ensure physical consistency in model output.</>}
@@ -674,7 +689,7 @@ export default function VydikPortfolio() {
             <Zap size={18} className="text-purple-400" /> Technical Arsenal
           </h3>
           <div className="flex flex-wrap gap-3 items-center justify-center">
-            {['Python', 'SQL', 'DSA', 'PyTorch', 'TensorFlow', 'LLMs', 'Transformers', 'Scikit-learn', 'C++', 'Google Cloud', 'Git', 'Pandas', 'NumPy', 'Reinforcement Learning'].map(s => (
+            {['Python', 'SQL', 'DSA', 'PyTorch', 'TensorFlow', 'LLMs', 'Transformers', 'Scikit-learn', 'C++', 'Google Cloud', 'Git', 'Pandas', 'NumPy', 'Reinforcement Learning', 'LangGraph', 'Docker', 'React'].map(s => (
               <span key={s} className="px-5 py-2 text-sm font-bold text-slate-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:text-purple-300 hover:border-purple-500/30 cursor-default transition-all shadow-lg shadow-black/20">{s}</span>
             ))}
           </div>
